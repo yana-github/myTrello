@@ -1,0 +1,146 @@
+/* Google font */
+@import url('https://fonts.googleapis.com/css?family=Orbitron');
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;400;600;700&display=swap');
+
+
+* {
+    box-sizing: border-box;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+
+.container {
+    max-width: 1140px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin: 0 auto;
+}
+
+
+/*header*/
+
+.header {
+    padding: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-bottom: 30px;
+    max-width: 1240px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #333;
+    font-size: 18px;
+    background-color: rgba(219, 203, 249, 0.997);
+    border-radius: 20px;
+    border: 5px solid rgba(211, 189, 255, 0.852);
+}
+
+
+.header__clock {
+    font-family: 'Orbitron', sans-serif;
+    color:rgb(0, 106, 255);
+    font-size: 30px;
+    text-align: center;
+  }
+
+
+  .board {
+    margin: 0 auto;
+    background: #F5F5F5;
+    text-align: center;
+  }
+
+.board__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 30px;
+}
+
+
+
+.board__todo {
+    border-radius: 10px;
+    width: calc((100% - 50px)/3);
+    padding: 10px;
+    border: 2px solid gray;
+}
+
+.board__progress {
+    border-radius: 10px;
+    width: calc((100% - 50px)/3);
+    padding: 10px;
+    border: 2px solid gray;
+}
+
+.board__done {
+    border-radius: 10px;
+    width: calc((100% - 50px)/3);
+    padding: 10px;
+    border: 2px solid gray;
+}
+
+
+
+.board-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: beige;
+
+}
+
+
+
+.board-header__count{
+    font-size: 20px;
+}
+
+.board__todo-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+    background-color: rgba(179, 249, 197, 0.944);
+    color: #333;
+    border-radius: 20px;
+    border: 3px solid  rgba(135, 250, 163, 0.574);
+    font-weight: 600;
+    font-size: 20px;
+    padding: 20px 0;
+    cursor: pointer;
+}
+
+.board__todo-btn:hover {
+    background-color:lightyellow;
+}
+
+.board__todo-btn:active {
+    background-color:bisque;
+}
+
+
+.board__done-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+    background-color: rgb(178, 212, 252);
+    color: #333;
+    border-radius: 20px;
+    border: 3px solid rgba(137, 189, 248, 0.856);
+    font-weight: 600;
+    font-size: 20px;
+    padding: 20px 0;
+    cursor: pointer;
+}
+
+
+.board__done-btn:hover {
+    background-color:lightyellow;
+}
+
+.board__done-btn:active {
+    background-color:bisque;
+}
