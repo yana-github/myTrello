@@ -1,20 +1,87 @@
 /* Google font */
-@import url('https://fonts.googleapis.com/css?family=Orbitron');
-
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;400;600;700&display=swap');
 
 
 * {
     box-sizing: border-box;
-    font-family: 'Source Sans Pro', sans-serif;
 }
 
 
+:root {
+    --mobile-padding: 16px;
+    --gutter: 15px;
+    --wrapper-width: 1170px;
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --gutter: 10px;
+        --mobile-padding: 30px;
+    }
+}
+
+@media (max-width: 992px) {
+    :root {
+        --gutter: 10px;
+        --mobile-padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --gutter: 20px;
+        --mobile-padding: 15px;
+    }
+}
+
+@media (max-width: 560px) {
+    :root {
+        --gutter: 20px;
+        --mobile-padding: 15px;
+    }
+}
+
+
+html {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #333;
+}
+
+
+/*components*/
+
 .container {
-    max-width: 1140px;
-    padding-left: 16px;
-    padding-right: 16px;
+    max-width: calc(var(--wrapper-width) + var(--mobile-padding) * 2);
+    padding-left: var(--mobile-padding);
+    padding-right: var(--mobile-padding);
     margin: 0 auto;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 calc(var(--gutter) * -1);
+}
+
+.col-4 {
+    width: calc(100% / 12 * 4 - var(--gutter) * 2);
+    margin: 0 var(--gutter);
+}
+
+
+@media (max-width: 768px) {
+    .col-md-6 {
+        margin: 0 var(--gutter);
+        width: calc(100% / 12 * 6 - var(--gutter) * 2);
+    }
+}
+
+
+@media (max-width: 560px) {
+    .col-sm-12 {
+        margin: 0 var(--gutter);
+        width: calc(100% / 12 * 12 - var(--gutter) * 2);
+    }
 }
 
 
@@ -29,21 +96,26 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #333;
     font-size: 18px;
     background-color: rgba(219, 203, 249, 0.997);
     border-radius: 20px;
     border: 5px solid rgba(211, 189, 255, 0.852);
 }
 
+.header__title {
+    font-weight: 600;
+    font-size: 32px;
+}
 
 .header__clock {
-    font-family: 'Orbitron', sans-serif;
-    color:rgb(0, 106, 255);
-    font-size: 30px;
+    border: 2px solid gray;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: #fff;
     text-align: center;
   }
-
 
   .board {
     margin: 0 auto;
@@ -52,95 +124,66 @@
   }
 
 .board__row {
-    display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 15px 30px;
+    align-content: stretch;
 }
 
-
-
-.board__todo {
+.board__item {
     border-radius: 10px;
-    width: calc((100% - 50px)/3);
-    padding: 10px;
     border: 2px solid gray;
+    margin-bottom: 20px;
 }
-
-.board__progress {
-    border-radius: 10px;
-    width: calc((100% - 50px)/3);
-    padding: 10px;
-    border: 2px solid gray;
-}
-
-.board__done {
-    border-radius: 10px;
-    width: calc((100% - 50px)/3);
-    padding: 10px;
-    border: 2px solid gray;
-}
-
-
 
 .board-header{
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: beige;
-
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 26px;
+    margin-bottom: 150px;
 }
 
-
-
-.board-header__count{
-    font-size: 20px;
-}
-
-.board__todo-btn {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: auto;
+.todo-header {
     background-color: rgba(179, 249, 197, 0.944);
-    color: #333;
-    border-radius: 20px;
-    border: 3px solid  rgba(135, 250, 163, 0.574);
-    font-weight: 600;
-    font-size: 20px;
-    padding: 20px 0;
-    cursor: pointer;
+}
+.progress-header {
+    background-color:lightgrey;
 }
 
-.board__todo-btn:hover {
-    background-color:lightyellow;
-}
-
-.board__todo-btn:active {
-    background-color:bisque;
+.done-header {
+    background-color: rgb(188, 212, 252);
 }
 
 
-.board__done-btn {
+.board-btn {
     display: flex;
     justify-content: center;
     width: 100%;
     margin-top: auto;
-    background-color: rgb(178, 212, 252);
-    color: #333;
-    border-radius: 20px;
-    border: 3px solid rgba(137, 189, 248, 0.856);
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
     padding: 20px 0;
     cursor: pointer;
+    border: none;
+    border-radius: 10px;
 }
 
-
-.board__done-btn:hover {
+.board-btn:hover {
     background-color:lightyellow;
 }
 
-.board__done-btn:active {
+.board-btn:active {
     background-color:bisque;
+}
+
+.add-btn {
+    background-color: rgba(179, 249, 197, 0.944);
+}
+
+.delete-btn {
+    background-color: rgb(188, 212, 252);
 }
