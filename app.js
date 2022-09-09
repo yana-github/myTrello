@@ -1,10 +1,12 @@
 import { createEl } from "./helpers.js";
-
+import { getDate } from "./helpers.js";
+import { randomInteger } from "./helpers.js";
 
 const root = document.querySelector("#root");
 const API = "https://jsonplaceholder.typicode.com/users";
 
 let users = [];
+let allTasks = [];
 
 function setStorage(key, arr) {
   localStorage.setItem(key, JSON.stringify(arr));
@@ -16,34 +18,24 @@ function getStorage(key) {
 
 //получение юзеров из АПИ
 
- async function getUsersApi() {
+async function getUsersApi() {
   const response = await fetch(API);
   if (response.ok) {
-      let data = await response.json();
-      users = data;
+    let data = await response.json();
+    users = data;
 
-/*       console.log(users); */
-      setStorage("usersAPI", users);
+    /*       console.log(users); */
+    setStorage("usersAPI", users);
   } else {
-      console.log(response.status, response.statusText);
+    console.log(response.status, response.statusText);
   }
 }
 
-getUsersApi()
+getUsersApi();
 
+//отправка задач в Сторадж
 
-//отрисовка юзеров для селекта в карточках
-
-/* function renderUser(){
- /*  console.log(JSON.parse(localStorage.getItem("usersAPI"))); 
- getStorage("usersAPI").forEach(i => {
-  let user = createEl("option", "new-card__user", "`${username}`");
-  user.value = username;
- });
-}
-
-renderUser()
-console.log(i.username) */
+//получение задач из Сторадж
 
 /* let todos = [];
 
@@ -59,23 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
   todos = getName();
   render(todos);
 }); */
-
-
-
-//часы
-
-window.onload = function () {
-  setInterval(function () {
-    let date = new Date(),
-      hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
-      min =
-        date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-    document.getElementById("minSec").innerHTML = hour + ":" + min;
-  }, 1000);
-};
-
-
-
 
 //добавить основные элементы
 let container = createEl("div", "container");
@@ -107,22 +82,31 @@ let boardDoneCount = createEl("span", "board-header__count", "0");
 let boardDoneList = createEl("ul", "board-list");
 let deleteAllBtn = createEl("button", "board-btn delete-btn", "Delete All");
 
+//часы
 
-
+window.onload = function () {
+  setInterval(function () {
+    let date = new Date(),
+      hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+      min =
+        date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+    document.getElementById("minSec").innerHTML = hour + ":" + min;
+  }, 1000);
+};
 
 //положить юзеров в селект
 
-function addOption (oListbox, text, value) {
-users.forEach(i => {
+function addOption(oListbox, text, value) {
+  users.forEach((i) => {
     let text = i.username;
-    let value = i.name;
-  let oOption = document.createElement("option");
-  oOption.append(document.createTextNode(text));
-  oOption.setAttribute("value", value);
+    let value = i.username;
+    let oOption = document.createElement("option");
+    oOption.append(document.createTextNode(text));
+    oOption.setAttribute("value", value);
 
-  oListbox.append(oOption);
-})
-};
+    oListbox.append(oOption);
+  });
+}
 
 //добавление новой карточки по кнопке Add
 
@@ -154,28 +138,33 @@ function addNewCard() {
   addOption(newCardSelect);
 
   let newCardBtnNo = createEl("button", "new-card__btn", "Cancel");
+  newCardBtnNo.addEventListener("click", () => {
+    newCard.style.display = "none";
+  });
+
   let newCardBtnYes = createEl("button", "new-card__btn", "Confirm");
+  newCardBtnYes.addEventListener("click", () => {
+    let newTask = {
+      id: randomInteger(1, 500),
+      date: getDate(),
+      user: newCardSelect.value,
+      title: newCardTitle.value,
+      description: newCardDesc.value,
+      isProgress: false,
+      isDone: false,
+    };
+    allTasks.push(newTask);
+    setStorage("AllTasks", allTasks);
+    newCardTitle.value = "";
+    newCardDesc.value = "";
+/*     render(allTasks); */
+  });
 
-  newCardNav.append(newCardSelect, newCardBtnNo, newCardBtnYes);
-  newCard.append(newCardTitle, newCardDesc, newCardNav);
-  root.append(newCard);
-}
 
-/*   if (!formInput.value) {
-    return;
-  }
-  const todo = {
-    id: randomInteger(1, 50),
-    date: getDate(),
-    text: formInput.value,
-    isChecked: false,
-  };
-  todos.push(todo);
-  setName();
-  formInput.value = "";
-  render(todos);
-}
- */
+newCardNav.append(newCardSelect, newCardBtnNo, newCardBtnYes);
+newCard.append(newCardTitle, newCardDesc, newCardNav);
+root.append(newCard);
+};
 
 addBtn.addEventListener("click", addNewCard);
 
