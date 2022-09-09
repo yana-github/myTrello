@@ -1,30 +1,80 @@
+import { createEl } from "./helpers.js";
+
+
 const root = document.querySelector("#root");
+const API = "https://jsonplaceholder.typicode.com/users";
 
-/*  function createEl(tag, className, text, type, placeholder) {
-  let el = document.createElement(tag);
-  className ? el.classList.add(className) : null;
-  text ? (el.innerText = text) : null;
-  if (tag === "input") {
-    type ? (el.type = type) : null;
-    placeholder ? (el.placeholder = placeholder) : null;
-  }
-  return el;
+let users = [];
+
+function setStorage(key, arr) {
+  localStorage.setItem(key, JSON.stringify(arr));
 }
 
- */
-
-function createEl(tag, className, text) {
-  let el = document.createElement(tag);
-  text ? (el.innerText = text) : null;
-
-  if (className) {
-      let arr = className.split(' ');
-      for (let elArr of arr) {
-          el.classList.add(elArr);
-      }
-  }
-  return el;
+function getStorage(key) {
+  return JSON.parse(localStorage.getItem(key));
 }
+
+//получение юзеров из АПИ
+
+ async function getUsersApi() {
+  const response = await fetch(API);
+  if (response.ok) {
+      let data = await response.json();
+      users = data;
+
+/*       console.log(users); */
+      setStorage("usersAPI", users);
+  } else {
+      console.log(response.status, response.statusText);
+  }
+}
+
+getUsersApi()
+
+
+//отрисовка юзеров для селекта в карточках
+
+/* function renderUser(){
+ /*  console.log(JSON.parse(localStorage.getItem("usersAPI"))); 
+ getStorage("usersAPI").forEach(i => {
+  let user = createEl("option", "new-card__user", "`${username}`");
+  user.value = username;
+ });
+}
+
+renderUser()
+console.log(i.username) */
+
+/* let todos = [];
+
+function getName() {
+  return JSON.parse(localStorage.getItem("todos")) ?? [];
+}
+
+function setName() {
+  localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  todos = getName();
+  render(todos);
+}); */
+
+
+
+//часы
+
+window.onload = function () {
+  setInterval(function () {
+    let date = new Date(),
+      hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
+      min =
+        date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+    document.getElementById("minSec").innerHTML = hour + ":" + min;
+  }, 1000);
+};
+
+
 
 
 //добавить основные элементы
@@ -60,19 +110,74 @@ let deleteAllBtn = createEl("button", "board-btn delete-btn", "Delete All");
 
 
 
-//часы
+//положить юзеров в селект
 
-window.onload = function() {
-  setInterval(function() {
-    let date = new Date(),
-    hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
-    min = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-    document.getElementById("minSec").innerHTML = hour + ":" + min;
-  }, 1000);
+function addOption (oListbox, text, value) {
+users.forEach(i => {
+    let text = i.username;
+    let value = i.name;
+  let oOption = document.createElement("option");
+  oOption.append(document.createTextNode(text));
+  oOption.setAttribute("value", value);
+
+  oListbox.append(oOption);
+})
+};
+
+//добавление новой карточки по кнопке Add
+
+function addNewCard() {
+  let newCard = createEl("div", "new-card__form");
+  let newCardTitle = createEl(
+    "input",
+    "new-card__input-title",
+    "",
+    "",
+    "Title"
+  );
+  let newCardDesc = createEl(
+    "textarea",
+    "new-card__input-desc",
+    "",
+    "",
+    "Description"
+  );
+  let newCardNav = createEl("div", "new-card__navigation");
+  let newCardSelect = createEl(
+    "select",
+    "new-card__select",
+    "",
+    "",
+    "Select User"
+  );
+
+  addOption(newCardSelect);
+
+  let newCardBtnNo = createEl("button", "new-card__btn", "Cancel");
+  let newCardBtnYes = createEl("button", "new-card__btn", "Confirm");
+
+  newCardNav.append(newCardSelect, newCardBtnNo, newCardBtnYes);
+  newCard.append(newCardTitle, newCardDesc, newCardNav);
+  root.append(newCard);
 }
 
+/*   if (!formInput.value) {
+    return;
+  }
+  const todo = {
+    id: randomInteger(1, 50),
+    date: getDate(),
+    text: formInput.value,
+    isChecked: false,
+  };
+  todos.push(todo);
+  setName();
+  formInput.value = "";
+  render(todos);
+}
+ */
 
-
+addBtn.addEventListener("click", addNewCard);
 
 //вложенность DOM элементов
 root.append(container);
