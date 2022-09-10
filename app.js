@@ -33,24 +33,20 @@ async function getUsersApi() {
 
 getUsersApi();
 
-//отправка задач в Сторадж
+document.addEventListener("DOMContentLoaded", () => {
+  console.log(getStorage("AllTasks"));
 
-//получение задач из Сторадж
+  allTasks = getStorage("AllTasks");
+  render(allTasks, boardTodoList);
+});
 
-/* let todos = [];
-
-function getName() {
+/* function getName() {
   return JSON.parse(localStorage.getItem("todos")) ?? [];
 }
 
 function setName() {
   localStorage.setItem("todos", JSON.stringify(todos));
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  todos = getName();
-  render(todos);
-}); */
+} */
 
 //добавить основные элементы
 let container = createEl("div", "container");
@@ -155,16 +151,53 @@ function addNewCard() {
     };
     allTasks.push(newTask);
     setStorage("AllTasks", allTasks);
-    newCardTitle.value = "";
-    newCardDesc.value = "";
-/*     render(allTasks); */
+    newCard.style.display = "none";
+    render(allTasks, boardTodoList);
   });
 
+  newCardNav.append(newCardSelect, newCardBtnNo, newCardBtnYes);
+  newCard.append(newCardTitle, newCardDesc, newCardNav);
+  root.append(newCard);
+}
 
-newCardNav.append(newCardSelect, newCardBtnNo, newCardBtnYes);
-newCard.append(newCardTitle, newCardDesc, newCardNav);
-root.append(newCard);
-};
+//отрисовка карточек из массива
+
+function render(arr, list) {
+  list.innerHTML = "";
+
+  arr.forEach((el) => {
+    let li = createEl("li", "card-item");
+    li.style.backgroundColor = "rgba(101, 81, 216, 0.1)";
+    li.id = el.id;
+
+    /*     if (el.isProgress) {
+      li.style.backgroundColor = "lightgrey";
+    } else if (el.isDone) {
+       li.style.backgroundColor = "rgb(188, 212, 252)";
+    }
+ */
+    let cardHeader = createEl("div", "card-header");
+    let cardTitle = createEl("div", "card-header__title", el.title);
+    let cardWrapBtn = createEl("div", "card-header__wrap-btn");
+    let cardEditBtn = createEl("button", "card-btn", "🖉");
+    let cardDelBtn = createEl("button", "card-btn", "✖");
+
+    let cardBody = createEl("div", "card-body");
+    let cardDesc = createEl("div", "card-body__desc", el.description);
+    let cardMoveBtn = createEl("button", "card-btn", "▶");
+
+    let cardFooter = createEl("div", "card-footer");
+    let cardUser = createEl("div", "card-footer__user", el.user);
+    let cardTime = createEl("div", "card-footer__date", el.date);
+
+    cardWrapBtn.append(cardEditBtn, cardDelBtn);
+    cardHeader.append(cardTitle, cardWrapBtn);
+    cardBody.append(cardDesc, cardMoveBtn);
+    cardFooter.append(cardUser, cardTime);
+    li.append(cardHeader, cardBody, cardFooter);
+    list.append(li);
+  });
+}
 
 addBtn.addEventListener("click", addNewCard);
 
