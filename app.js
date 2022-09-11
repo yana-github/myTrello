@@ -34,10 +34,9 @@ async function getUsersApi() {
 getUsersApi();
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log(getStorage("AllTasks"));
-
   allTasks = getStorage("AllTasks");
   render(allTasks, boardTodoList);
+  render(allTasks.filter(el => el.status === "isProgress"), boardProgressList);
 });
 
 /* function getName() {
@@ -146,8 +145,7 @@ function addNewCard() {
       user: newCardSelect.value,
       title: newCardTitle.value,
       description: newCardDesc.value,
-      isProgress: false,
-      isDone: false,
+      status: "toDo", //по умолчанию для всех новых карточек
     };
     allTasks.push(newTask);
     setStorage("AllTasks", allTasks);
@@ -170,28 +168,60 @@ function render(arr, list) {
     li.style.backgroundColor = "rgba(101, 81, 216, 0.1)";
     li.id = el.id;
 
-    /*     if (el.isProgress) {
+   if (el.status === "isProgress") {
       li.style.backgroundColor = "lightgrey";
-    } else if (el.isDone) {
+    }    else if (el.isDone) {
        li.style.backgroundColor = "rgb(188, 212, 252)";
     }
+/*     else if (el.isDone) {
+      li.style.backgroundColor = "rgb(188, 212, 252)";
+   }
  */
+ 
     let cardHeader = createEl("div", "card-header");
     let cardTitle = createEl("div", "card-header__title", el.title);
     let cardWrapBtn = createEl("div", "card-header__wrap-btn");
+
+    //только для ТУДУ
     let cardEditBtn = createEl("button", "card-btn", "🖉");
     let cardDelBtn = createEl("button", "card-btn", "✖");
+    cardDelBtn.addEventListener("click", (e) => {                      //удалить карточку по кнопке Х
+      let delIndex = allTasks.findIndex(
+        (el) => el.id === +e.target.closest("li").getAttribute("id")
+      );
+      allTasks.splice(delIndex, 1);
+      setStorage("AllTasks", allTasks);
+      render(allTasks, boardTodoList);
+    });
+////
+
 
     let cardBody = createEl("div", "card-body");
     let cardDesc = createEl("div", "card-body__desc", el.description);
+
+
+    ////
     let cardMoveBtn = createEl("button", "card-btn", "▶");
+    cardMoveBtn.addEventListener("click", (e) => { 
+      let moveIndex = allTasks.findIndex(
+        (el) => el.id === +e.target.closest("li").getAttribute("id")
+      );
+      allTasks[moveIndex].status = "isProgress";   
+      console.log(allTasks);
+  setStorage("AllTasks", allTasks);
+  console.log(allTasks.filter(el => el.status === "isProgress"));
+   render(allTasks.filter(el => el.status === "isProgress"), boardProgressList);
+    });
+  ////
 
     let cardFooter = createEl("div", "card-footer");
     let cardUser = createEl("div", "card-footer__user", el.user);
     let cardTime = createEl("div", "card-footer__date", el.date);
-
+/////
     cardWrapBtn.append(cardEditBtn, cardDelBtn);
+    //////
     cardHeader.append(cardTitle, cardWrapBtn);
+    /////
     cardBody.append(cardDesc, cardMoveBtn);
     cardFooter.append(cardUser, cardTime);
     li.append(cardHeader, cardBody, cardFooter);

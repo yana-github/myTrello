@@ -278,11 +278,11 @@ html {
   margin-right: 10px;
   border-radius: 20px;
   border: 1px solid gray;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .card-header {
-  display: flex;
+  display: flex; 
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -292,6 +292,14 @@ html {
 .card-header__title {
   font-weight: 600;
   text-transform: uppercase;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.card-header__wrap-btn {
+  flex-shrink: 0;
 }
 
 .card-body {
@@ -304,6 +312,8 @@ html {
 
 .card-body__desc {
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-footer {
@@ -316,23 +326,21 @@ html {
 .card-footer__date {
   border: 2px solid gray;
   border-radius: 5px;
-  padding: 0 5px;
+  padding: 0 2px;
   background-color: #fff;
   text-align: center;
+  font-size: 14px;
 }
 
 .card-footer__user {
-  border: 2px solid gray;
-  border-radius: 5px;
-  padding: 0 5px;
-  background-color: #fff;
-  text-align: center;
+  font-size: 14px;
+  margin-right: 10px;
 }
 
 .card-btn {
-  margin-right: 10px;
+ /*  margin-right: 8px; */
   background-color: transparent;
-  font-size: 22px;
+  font-size: 20px;
   border: none;
   cursor: pointer;
 }
