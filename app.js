@@ -33,10 +33,22 @@ async function getUsersApi() {
 
 getUsersApi();
 
+//отрисовка при перезагрузке страницы
+
 document.addEventListener("DOMContentLoaded", () => {
   allTasks = getStorage("AllTasks");
-  render(allTasks, boardTodoList);
-  render(allTasks.filter(el => el.status === "isProgress"), boardProgressList);
+  render(
+    allTasks.filter((el) => el.status === "toDo"),
+    boardTodoList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isProgress"),
+    boardProgressList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isDone"),
+    boardDoneList
+  );
 });
 
 /* function getName() {
@@ -103,7 +115,7 @@ function addOption(oListbox, text, value) {
   });
 }
 
-//добавление новой карточки по кнопке Add
+//добавить новую карточку, забрать данные в ЛС
 
 function addNewCard() {
   let newCard = createEl("div", "new-card__form");
@@ -150,13 +162,111 @@ function addNewCard() {
     allTasks.push(newTask);
     setStorage("AllTasks", allTasks);
     newCard.style.display = "none";
-    render(allTasks, boardTodoList);
+    render(
+      allTasks.filter((el) => el.status === "toDo"),
+      boardTodoList
+    );
+    render(
+      allTasks.filter((el) => el.status === "isProgress"),
+      boardProgressList
+    );
+    render(
+      allTasks.filter((el) => el.status === "isDone"),
+      boardDoneList
+    );
   });
 
   newCardNav.append(newCardSelect, newCardBtnNo, newCardBtnYes);
   newCard.append(newCardTitle, newCardDesc, newCardNav);
   root.append(newCard);
 }
+
+//удалить карточку по кнопке Х
+function deleteCard(e) {
+  let delIndex = allTasks.findIndex(
+    (el) => el.id === +e.target.closest("li").getAttribute("id")
+  );
+  allTasks.splice(delIndex, 1);
+  setStorage("AllTasks", allTasks);
+  render(
+    allTasks.filter((el) => el.status === "toDo"),
+    boardTodoList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isProgress"),
+    boardProgressList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isDone"),
+    boardDoneList
+  );
+}
+
+function moveCard(e) {
+  let moveIndex = allTasks.findIndex(
+    (el) => el.id === +e.target.closest("li").getAttribute("id")
+  );
+  allTasks[moveIndex].status = "isProgress";
+
+  setStorage("AllTasks", allTasks);
+  render(
+    allTasks.filter((el) => el.status === "toDo"),
+    boardTodoList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isProgress"),
+    boardProgressList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isDone"),
+    boardDoneList
+  );
+}
+
+function moveBackCard(e) {
+  let moveIndex = allTasks.findIndex(
+    (el) => el.id === +e.target.closest("li").getAttribute("id")
+  );
+  allTasks[moveIndex].status = "toDo";
+
+  setStorage("AllTasks", allTasks);
+  render(
+    allTasks.filter((el) => el.status === "toDo"),
+    boardTodoList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isProgress"),
+    boardProgressList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isDone"),
+    boardDoneList
+  );
+}
+
+function moveFinalCard(e) {
+  let moveIndex = allTasks.findIndex(
+    (el) => el.id === +e.target.closest("li").getAttribute("id")
+  );
+  allTasks[moveIndex].status = "isDone";
+
+  setStorage("AllTasks", allTasks);
+  render(
+    allTasks.filter((el) => el.status === "toDo"),
+    boardTodoList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isProgress"),
+    boardProgressList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isDone"),
+    boardDoneList
+  );
+}
+
+
+
 
 //отрисовка карточек из массива
 
@@ -165,67 +275,55 @@ function render(arr, list) {
 
   arr.forEach((el) => {
     let li = createEl("li", "card-item");
-    li.style.backgroundColor = "rgba(101, 81, 216, 0.1)";
     li.id = el.id;
 
-   if (el.status === "isProgress") {
-      li.style.backgroundColor = "lightgrey";
-    }    else if (el.isDone) {
-       li.style.backgroundColor = "rgb(188, 212, 252)";
-    }
-/*     else if (el.isDone) {
-      li.style.backgroundColor = "rgb(188, 212, 252)";
-   }
- */
- 
     let cardHeader = createEl("div", "card-header");
     let cardTitle = createEl("div", "card-header__title", el.title);
     let cardWrapBtn = createEl("div", "card-header__wrap-btn");
 
-    //только для ТУДУ
-    let cardEditBtn = createEl("button", "card-btn", "🖉");
-    let cardDelBtn = createEl("button", "card-btn", "✖");
-    cardDelBtn.addEventListener("click", (e) => {                      //удалить карточку по кнопке Х
-      let delIndex = allTasks.findIndex(
-        (el) => el.id === +e.target.closest("li").getAttribute("id")
-      );
-      allTasks.splice(delIndex, 1);
-      setStorage("AllTasks", allTasks);
-      render(allTasks, boardTodoList);
-    });
-////
-
-
     let cardBody = createEl("div", "card-body");
     let cardDesc = createEl("div", "card-body__desc", el.description);
-
-
-    ////
-    let cardMoveBtn = createEl("button", "card-btn", "▶");
-    cardMoveBtn.addEventListener("click", (e) => { 
-      let moveIndex = allTasks.findIndex(
-        (el) => el.id === +e.target.closest("li").getAttribute("id")
-      );
-      allTasks[moveIndex].status = "isProgress";   
-      console.log(allTasks);
-  setStorage("AllTasks", allTasks);
-  console.log(allTasks.filter(el => el.status === "isProgress"));
-   render(allTasks.filter(el => el.status === "isProgress"), boardProgressList);
-    });
-  ////
 
     let cardFooter = createEl("div", "card-footer");
     let cardUser = createEl("div", "card-footer__user", el.user);
     let cardTime = createEl("div", "card-footer__date", el.date);
-/////
-    cardWrapBtn.append(cardEditBtn, cardDelBtn);
-    //////
+
     cardHeader.append(cardTitle, cardWrapBtn);
-    /////
-    cardBody.append(cardDesc, cardMoveBtn);
+    cardBody.append(cardDesc);
     cardFooter.append(cardUser, cardTime);
     li.append(cardHeader, cardBody, cardFooter);
     list.append(li);
+
+    //кнопки и стиль карточек в зависимости от статуса
+
+    if (el.status === "toDo") {
+      li.style.backgroundColor = "lightgreen";
+
+      let cardEditBtn = createEl("button", "card-btn", "🖉");
+
+      let cardDelBtn = createEl("button", "card-btn", "✖");
+      cardDelBtn.addEventListener("click", deleteCard);
+
+      let cardMoveBtn = createEl("button", "card-btn", "▶");
+      cardMoveBtn.addEventListener("click", moveCard);
+
+      cardWrapBtn.append(cardEditBtn, cardDelBtn);
+      cardBody.append(cardMoveBtn);
+    } else if (el.status === "isProgress") {
+      li.style.backgroundColor = "lightgrey";
+
+      let cardMoveBackBtn = createEl("button", "card-btn", "◀");
+      cardMoveBackBtn.addEventListener("click", moveBackCard);
+
+      let cardCompleteBtn = createEl("button", "card-btn", "✔");
+      cardCompleteBtn.addEventListener("click", moveFinalCard);
+
+      cardWrapBtn.append(cardMoveBackBtn, cardCompleteBtn);
+
+
+    } else if (el.status === "isDone") {
+      li.style.backgroundColor = "lightblue";
+    }
   });
 }
 
