@@ -49,15 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
     allTasks.filter((el) => el.status === "isDone"),
     boardDoneList
   );
+  scoreCount();
 });
 
-/* function getName() {
-  return JSON.parse(localStorage.getItem("todos")) ?? [];
-}
-
-function setName() {
-  localStorage.setItem("todos", JSON.stringify(todos));
-} */
 
 //добавить основные элементы
 let container = createEl("div", "container");
@@ -115,6 +109,7 @@ function addOption(oListbox, text, value) {
   });
 }
 
+
 //добавить новую карточку, забрать данные в ЛС
 
 function addNewCard() {
@@ -151,6 +146,12 @@ function addNewCard() {
 
   let newCardBtnYes = createEl("button", "new-card__btn", "Confirm");
   newCardBtnYes.addEventListener("click", () => {
+
+    if (!newCardTitle.value || !newCardDesc.value) {
+      newCard.style.display = "none";
+      return;
+    }
+
     let newTask = {
       id: randomInteger(1, 500),
       date: getDate(),
@@ -174,6 +175,7 @@ function addNewCard() {
       allTasks.filter((el) => el.status === "isDone"),
       boardDoneList
     );
+    scoreCount();
   });
 
   newCardNav.append(newCardSelect, newCardBtnNo, newCardBtnYes);
@@ -181,7 +183,28 @@ function addNewCard() {
   root.append(newCard);
 }
 
-//удалить карточку по кнопке Х
+//удалить все карточки
+function deleteAllCards() {
+  allTasks.length = 0;
+  setStorage("AllTasks", allTasks);
+    render(
+      allTasks.filter((el) => el.status === "toDo"),
+      boardTodoList
+    );
+    render(
+      allTasks.filter((el) => el.status === "isProgress"),
+      boardProgressList
+    );
+    render(
+      allTasks.filter((el) => el.status === "isDone"),
+      boardDoneList
+    );
+    scoreCount();
+}
+
+
+
+//удалить карточку
 function deleteCard(e) {
   let delIndex = allTasks.findIndex(
     (el) => el.id === +e.target.closest("li").getAttribute("id")
@@ -200,8 +223,10 @@ function deleteCard(e) {
     allTasks.filter((el) => el.status === "isDone"),
     boardDoneList
   );
+  scoreCount();
 }
 
+//переместить карточку в другие колонки
 function moveCard(e) {
   let moveIndex = allTasks.findIndex(
     (el) => el.id === +e.target.closest("li").getAttribute("id")
@@ -221,6 +246,7 @@ function moveCard(e) {
     allTasks.filter((el) => el.status === "isDone"),
     boardDoneList
   );
+  scoreCount();
 }
 
 function moveBackCard(e) {
@@ -242,6 +268,7 @@ function moveBackCard(e) {
     allTasks.filter((el) => el.status === "isDone"),
     boardDoneList
   );
+  scoreCount();
 }
 
 function moveFinalCard(e) {
@@ -263,6 +290,28 @@ function moveFinalCard(e) {
     allTasks.filter((el) => el.status === "isDone"),
     boardDoneList
   );
+  scoreCount();
+}
+
+
+function scoreCount() {
+  let scoreToDo = 0;
+  let scoreIsProgress = 0;
+  let scoreIsDone = 0;
+
+  allTasks.forEach (el => {
+    if (el.status === "toDo") {
+      scoreToDo ++; 
+    } else if (el.status === "isProgress") {
+      scoreIsProgress ++;
+    } else if (el.status === "isDone") {
+      scoreIsDone ++;
+  }
+});
+
+boardTodoCount.innerText = scoreToDo;
+boardProgressCount.innerText = scoreIsProgress;
+boardDoneCount.innerText = scoreIsDone;
 }
 
 
@@ -297,7 +346,7 @@ function render(arr, list) {
     //кнопки и стиль карточек в зависимости от статуса
 
     if (el.status === "toDo") {
-      li.style.backgroundColor = "lightgreen";
+      li.style.backgroundColor = "rgba(179, 249, 197, 0.944)";
 
       let cardEditBtn = createEl("button", "card-btn", "🖉");
 
@@ -309,6 +358,8 @@ function render(arr, list) {
 
       cardWrapBtn.append(cardEditBtn, cardDelBtn);
       cardBody.append(cardMoveBtn);
+
+
     } else if (el.status === "isProgress") {
       li.style.backgroundColor = "lightgrey";
 
@@ -322,12 +373,19 @@ function render(arr, list) {
 
 
     } else if (el.status === "isDone") {
-      li.style.backgroundColor = "lightblue";
+      li.style.backgroundColor = "rgb(188, 212, 252)";
+
+      let cardDeleteBtn = createEl("button", "card-btn", "✖");
+      cardDeleteBtn.addEventListener("click", deleteCard);
+
+      cardWrapBtn.append(cardDeleteBtn);
     }
   });
 }
 
 addBtn.addEventListener("click", addNewCard);
+deleteAllBtn.addEventListener("click", deleteAllCards);
+
 
 //вложенность DOM элементов
 root.append(container);

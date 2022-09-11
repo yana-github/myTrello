@@ -125,6 +125,7 @@ html {
 
 .board__row {
   justify-content: space-between;
+  align-items: flex-start;
   align-content: stretch;
 }
 
@@ -140,11 +141,11 @@ html {
   align-items: center;
   background-color: beige;
   border-radius: 10px;
-  padding: 30px 20px;
+  padding: 25px 20px;
   text-transform: uppercase;
   font-weight: 600;
   font-size: 26px;
-  margin-bottom: 150px;
+  margin-bottom: 30px;
 }
 
 .todo-header {
@@ -157,6 +158,11 @@ html {
 
 .done-header {
   background-color: rgb(188, 212, 252);
+}
+
+
+.board-list {
+  margin-bottom: 30px;
 }
 
 .board-btn {
@@ -196,7 +202,7 @@ html {
   left: 10vw;
   display: flex;
   flex-direction: column;
-  background-color: rgba(92, 248, 131, 0.944);
+  background-color:  lightyellow;
   max-width: 400px;
   width: 100%;
   border-radius: 10px;
@@ -243,11 +249,11 @@ html {
 }
 
 .new-card__btn:hover {
-  background-color: lightyellow;
+  background-color: rgba(225, 213, 247, 0.997);
 }
 
 .new-card__btn:active {
-  background-color: bisque;
+  background-color: rgba(186, 154, 251, 0.852);
 }
 
 .new-card__navigation {
@@ -286,6 +292,7 @@ html {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
   margin-bottom: 20px;
 }
 
@@ -293,7 +300,7 @@ html {
   font-weight: 600;
   text-transform: uppercase;
   flex-shrink: 1;
-  overflow: hidden;
+ overflow: hidden;
   text-overflow: ellipsis;
 }
 
