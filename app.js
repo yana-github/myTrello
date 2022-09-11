@@ -121,6 +121,7 @@ function addNewCard() {
     "",
     "Title"
   );
+
   let newCardDesc = createEl(
     "textarea",
     "new-card__input-desc",
@@ -185,6 +186,10 @@ function addNewCard() {
 
 //удалить все карточки
 function deleteAllCards() {
+  let ok = confirm("Точно удалить все задачи?");
+  if (!ok) {
+   return;
+  } 
   allTasks.length = 0;
   setStorage("AllTasks", allTasks);
     render(
@@ -231,6 +236,12 @@ function moveCard(e) {
   let moveIndex = allTasks.findIndex(
     (el) => el.id === +e.target.closest("li").getAttribute("id")
   );
+
+  if ( allTasks.filter((el) => el.status === "isProgress").length > 5) {
+    alert("Притормози, дружище");
+    return;
+  }
+
   allTasks[moveIndex].status = "isProgress";
 
   setStorage("AllTasks", allTasks);
