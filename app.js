@@ -52,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
   scoreCount();
 });
 
-
 //добавить основные элементы
 let container = createEl("div", "container");
 let header = createEl("div", "header");
@@ -109,7 +108,6 @@ function addOption(oListbox, text, value) {
   });
 }
 
-
 //добавить новую карточку, забрать данные в ЛС
 
 function addNewCard() {
@@ -147,7 +145,6 @@ function addNewCard() {
 
   let newCardBtnYes = createEl("button", "new-card__btn", "Confirm");
   newCardBtnYes.addEventListener("click", () => {
-
     if (!newCardTitle.value || !newCardDesc.value) {
       newCard.style.display = "none";
       return;
@@ -186,28 +183,30 @@ function addNewCard() {
 
 //удалить все карточки
 function deleteAllCards() {
-  let ok = confirm("Точно удалить все задачи?");
+ /*  let ok = confirm("Точно удалить все задачи?");
   if (!ok) {
-   return;
+    return;
   } 
+  activeModal();
+  */
+
   allTasks.length = 0;
   setStorage("AllTasks", allTasks);
-    render(
-      allTasks.filter((el) => el.status === "toDo"),
-      boardTodoList
-    );
-    render(
-      allTasks.filter((el) => el.status === "isProgress"),
-      boardProgressList
-    );
-    render(
-      allTasks.filter((el) => el.status === "isDone"),
-      boardDoneList
-    );
-    scoreCount();
+  deactiveModal();
+  render(
+    allTasks.filter((el) => el.status === "toDo"),
+    boardTodoList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isProgress"),
+    boardProgressList
+  );
+  render(
+    allTasks.filter((el) => el.status === "isDone"),
+    boardDoneList
+  );
+  scoreCount();
 }
-
-
 
 //удалить карточку
 function deleteCard(e) {
@@ -237,7 +236,7 @@ function moveCard(e) {
     (el) => el.id === +e.target.closest("li").getAttribute("id")
   );
 
-  if ( allTasks.filter((el) => el.status === "isProgress").length > 5) {
+  if (allTasks.filter((el) => el.status === "isProgress").length > 5) {
     alert("Притормози, дружище");
     return;
   }
@@ -305,30 +304,57 @@ function moveFinalCard(e) {
 }
 
 
+//создание модалки-1
+
+let modal = createEl("div", "modal");
+let modalWrap = createEl("div", "modal__wrap");
+let modalText = createEl("div", "modal__text", "Warning!");
+let modalNav = createEl("div", "modal__navigation");
+let modalBtnNo = createEl("button", "new-card__btn", "Cancel");
+modalBtnNo.addEventListener("click", deactiveModal);
+let modalBtnYes = createEl("button", "new-card__btn", "Confirm");
+modalBtnYes.addEventListener("click", deleteAllCards);
+
+modalNav.append(modalBtnNo, modalBtnYes);
+modalWrap.append(modalText, modalNav);
+modal.append(modalWrap);
+root.append(modal);
+
+
+//работа модалки
+
+function activeModal() {
+  modal.classList.add('modal_active');
+}
+
+function deactiveModal() {
+  modal.classList.remove('modal_active');
+}
+
+
+//счетчики задач для хедера в колонках
+
 function scoreCount() {
   let scoreToDo = 0;
   let scoreIsProgress = 0;
   let scoreIsDone = 0;
 
-  allTasks.forEach (el => {
+  allTasks.forEach((el) => {
     if (el.status === "toDo") {
-      scoreToDo ++; 
+      scoreToDo++;
     } else if (el.status === "isProgress") {
-      scoreIsProgress ++;
+      scoreIsProgress++;
     } else if (el.status === "isDone") {
-      scoreIsDone ++;
-  }
-});
+      scoreIsDone++;
+    }
+  });
 
-boardTodoCount.innerText = scoreToDo;
-boardProgressCount.innerText = scoreIsProgress;
-boardDoneCount.innerText = scoreIsDone;
+  boardTodoCount.innerText = scoreToDo;
+  boardProgressCount.innerText = scoreIsProgress;
+  boardDoneCount.innerText = scoreIsDone;
 }
 
-
-
-
-//отрисовка карточек из массива
+//отрисовка карточек из массива и прослушка на кнопки
 
 function render(arr, list) {
   list.innerHTML = "";
@@ -360,6 +386,7 @@ function render(arr, list) {
       li.style.backgroundColor = "rgba(179, 249, 197, 0.944)";
 
       let cardEditBtn = createEl("button", "card-btn", "🖉");
+      /*    cardEditBtn.addEventListener("click", editCard); */
 
       let cardDelBtn = createEl("button", "card-btn", "✖");
       cardDelBtn.addEventListener("click", deleteCard);
@@ -369,8 +396,6 @@ function render(arr, list) {
 
       cardWrapBtn.append(cardEditBtn, cardDelBtn);
       cardBody.append(cardMoveBtn);
-
-
     } else if (el.status === "isProgress") {
       li.style.backgroundColor = "lightgrey";
 
@@ -381,8 +406,6 @@ function render(arr, list) {
       cardCompleteBtn.addEventListener("click", moveFinalCard);
 
       cardWrapBtn.append(cardMoveBackBtn, cardCompleteBtn);
-
-
     } else if (el.status === "isDone") {
       li.style.backgroundColor = "rgb(188, 212, 252)";
 
@@ -395,8 +418,7 @@ function render(arr, list) {
 }
 
 addBtn.addEventListener("click", addNewCard);
-deleteAllBtn.addEventListener("click", deleteAllCards);
-
+deleteAllBtn.addEventListener("click", activeModal);
 
 //вложенность DOM элементов
 root.append(container);

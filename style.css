@@ -359,3 +359,55 @@ html {
 .card-btn:active {
   background-color: bisque;
 }
+
+/*modal*/
+
+.modal {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  transition: .3s;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-y: scroll;
+  padding: 50px;
+}
+ 
+.modal_active {
+  position: fixed;
+  top: 0;
+  visibility: visible;
+  opacity: 1;
+  transition: .3s;
+}
+
+.modal__wrap {
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  background-color: bisque;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 5px 15px black;
+}
+
+.modal__text {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.modal__navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
