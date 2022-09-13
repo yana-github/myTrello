@@ -182,17 +182,12 @@ function addNewCard() {
 }
 
 //удалить все карточки
-function deleteAllCards() {
- /*  let ok = confirm("Точно удалить все задачи?");
-  if (!ok) {
-    return;
-  } 
-  activeModal();
-  */
+function deleteDoneCards() {
+  allTasks = allTasks.filter((el) => el.status !== "isDone");
 
-  allTasks.length = 0;
   setStorage("AllTasks", allTasks);
-  deactiveModal();
+  deactiveModal1();
+
   render(
     allTasks.filter((el) => el.status === "toDo"),
     boardTodoList
@@ -237,7 +232,7 @@ function moveCard(e) {
   );
 
   if (allTasks.filter((el) => el.status === "isProgress").length > 5) {
-    alert("Притормози, дружище");
+    activeModal2();
     return;
   }
 
@@ -303,34 +298,61 @@ function moveFinalCard(e) {
   scoreCount();
 }
 
-
 //создание модалки-1
 
-let modal = createEl("div", "modal");
-let modalWrap = createEl("div", "modal__wrap");
-let modalText = createEl("div", "modal__text", "Warning!");
-let modalNav = createEl("div", "modal__navigation");
-let modalBtnNo = createEl("button", "new-card__btn", "Cancel");
-modalBtnNo.addEventListener("click", deactiveModal);
-let modalBtnYes = createEl("button", "new-card__btn", "Confirm");
-modalBtnYes.addEventListener("click", deleteAllCards);
+let modal1 = createEl("div", "modal");
+let modal1Wrap = createEl("div", "modal__wrap");
+let modal1Text = createEl(
+  "div",
+  "modal__text",
+  "Are you sure you want to delete all the tasks?"
+);
+let modal1Nav = createEl("div", "modal__navigation");
+let modal1BtnNo = createEl("button", "new-card__btn", "Uh no");
+modal1BtnNo.addEventListener("click", deactiveModal1);
+let modal1BtnYes = createEl("button", "new-card__btn", "Yes please");
+modal1BtnYes.addEventListener("click", deleteDoneCards);
 
-modalNav.append(modalBtnNo, modalBtnYes);
-modalWrap.append(modalText, modalNav);
-modal.append(modalWrap);
-root.append(modal);
-
+modal1Nav.append(modal1BtnNo, modal1BtnYes);
+modal1Wrap.append(modal1Text, modal1Nav);
+modal1.append(modal1Wrap);
+root.append(modal1);
 
 //работа модалки
 
-function activeModal() {
-  modal.classList.add('modal_active');
+function activeModal1() {
+  modal1.classList.add("modal_active");
 }
 
-function deactiveModal() {
-  modal.classList.remove('modal_active');
+function deactiveModal1() {
+  modal1.classList.remove("modal_active");
 }
 
+//создание модалки-2
+
+let modal2 = createEl("div", "modal");
+let modal2Wrap = createEl("div", "modal__wrap");
+let modal2Text = createEl(
+  "div",
+  "modal__text",
+  "OMG finish at least one task before adding more"
+);
+let modal2Nav = createEl("div", "modal__navigation");
+let modal2Btn = createEl("button", "new-card__btn", "OK then");
+modal2Btn.addEventListener("click", deactiveModal2);
+
+modal2Nav.append(modal2Btn);
+modal2Wrap.append(modal2Text, modal2Nav);
+modal2.append(modal2Wrap);
+root.append(modal2);
+
+function activeModal2() {
+  modal2.classList.add("modal_active");
+}
+
+function deactiveModal2() {
+  modal2.classList.remove("modal_active");
+}
 
 //счетчики задач для хедера в колонках
 
@@ -418,7 +440,7 @@ function render(arr, list) {
 }
 
 addBtn.addEventListener("click", addNewCard);
-deleteAllBtn.addEventListener("click", activeModal);
+deleteAllBtn.addEventListener("click", activeModal1);
 
 //вложенность DOM элементов
 root.append(container);
